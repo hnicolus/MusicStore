@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 using System.Windows.Input;
 using ReactiveUI;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
+using MusicStore.Models;
+
 namespace MusicStore.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
@@ -35,11 +39,25 @@ public Interaction<MusicStoreViewModel,AlbumViewModel?> ShowDialog { get;  }
                     Albums.Add(result);
                     await result.SaveToDiskAsync();
                 }
+
             });
             
             this.WhenAnyValue(x => x.Albums.Count)
                 .Subscribe(x => CollectionEmpty = x == 0);
         }
-        
+        private async Task LoadAlbums()
+        {
+            var albums = (await Album.LoadCachedAsync()).Select(x => new AlbumViewModel(x));
+
+            foreach (var album in albums)
+            {
+                Albums.Add(album);
+            }
+
+            foreach (var album in Albums.ToList())
+            {
+                await album.LoadCover();
+            }
+        }
     }
 }
