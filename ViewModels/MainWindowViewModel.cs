@@ -33,6 +33,7 @@ public Interaction<MusicStoreViewModel,AlbumViewModel?> ShowDialog { get;  }
                 if (result != null)
                 {
                     Albums.Add(result);
+                    await result.SaveToDiskAsync();
                 }
             });
             
