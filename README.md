@@ -1,4 +1,4 @@
-# MusicStore
+# Music Store (Avalonia Demo)
 
 Cross platform Music Store, created with Avalonia.
 
